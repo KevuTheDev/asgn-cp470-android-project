@@ -28,7 +28,6 @@ public class DashboardFragment extends Fragment {
 
   private FragmentDashboardBinding binding;
   private ArrayList<String> messages = new ArrayList<String>();
-  private EditText ChatTextbox;
   private ListView ChatList;
   ChatAdapter messageAdapter;
 
@@ -67,11 +66,11 @@ public class DashboardFragment extends Fragment {
     binding = FragmentDashboardBinding.inflate(inflater, container, false);
     View root = binding.getRoot();
 
-    final TextView textView = binding.textDashboard;
-    dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-    messages.add("Hello there");
-    messages.add("hi there");
+    messages.add("Stop 1: Bricker Academic");
+    messages.add("Stop 2: King St. North");
+    messages.add("Stop 3: University Ave");
+
     messageAdapter =new ChatAdapter( root.getContext());
 
     ChatList = root.findViewById(R.id.stops);
