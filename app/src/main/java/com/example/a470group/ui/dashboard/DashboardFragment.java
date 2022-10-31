@@ -2,6 +2,7 @@ package com.example.a470group.ui.dashboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,12 @@ public class DashboardFragment extends Fragment {
   private ListView ChatList;
   ChatAdapter messageAdapter;
 
+  public void onStopClick(View view){
+    TextView x = (TextView) view;
+    Log.i("butt",x.toString());
+    Log.i("butt",x.getText().toString());
+
+  }
 
   private class ChatAdapter extends ArrayAdapter<String>{
     public ChatAdapter(Context ctx) {
@@ -54,6 +61,12 @@ public class DashboardFragment extends Fragment {
 
 
       message.setText(   getItem(position)  ); // get the string at position
+      message.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          onStopClick(v);
+        }
+      });
       return result;
     }
   }
@@ -67,6 +80,7 @@ public class DashboardFragment extends Fragment {
     View root = binding.getRoot();
 
 
+
     messages.add("Stop 1: Bricker Academic");
     messages.add("Stop 2: King St. North");
     messages.add("Stop 3: University Ave");
@@ -76,6 +90,7 @@ public class DashboardFragment extends Fragment {
     ChatList = root.findViewById(R.id.stops);
     ChatList.setAdapter (messageAdapter);
     messageAdapter.notifyDataSetChanged(); //this restarts the process of getCount()/
+
 
 
 
