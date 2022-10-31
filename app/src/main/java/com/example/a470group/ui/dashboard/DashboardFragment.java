@@ -1,6 +1,8 @@
 package com.example.a470group.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.a470group.R;
 import com.example.a470group.databinding.FragmentDashboardBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 
@@ -32,10 +36,42 @@ public class DashboardFragment extends Fragment {
   private ListView ChatList;
   ChatAdapter messageAdapter;
 
+
+  public void makeDialog(Context ctx, String stopName){
+    String[] stopTime = {"1:00","2:00","4:30"};
+    LinearLayout linearLayout = new LinearLayout(ctx);
+    linearLayout.setOrientation(LinearLayout.VERTICAL);
+    for( int i = 0; i <stopTime.length; i++ )
+    {
+      TextView textView = new TextView(ctx);
+      textView.setText(stopTime[i]);
+      linearLayout.addView(textView);
+    }
+
+
+    AlertDialog.Builder builder2 = new AlertDialog.Builder(ctx);
+    builder2.setTitle(stopName);
+
+    // Add the buttons
+    builder2.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int id) {
+
+      }
+    });
+
+
+
+    AlertDialog dialog2 = builder2.create();
+    dialog2.setView(linearLayout);
+
+    dialog2.show();
+  }
+
   public void onStopClick(View view){
     TextView x = (TextView) view;
     Log.i("butt",x.toString());
     Log.i("butt",x.getText().toString());
+
 
   }
 
@@ -65,6 +101,11 @@ public class DashboardFragment extends Fragment {
         @Override
         public void onClick(View v) {
           onStopClick(v);
+          TextView x = (TextView) v;
+
+          String name = x.getText().toString();
+          makeDialog(getContext(),name);
+
         }
       });
       return result;
