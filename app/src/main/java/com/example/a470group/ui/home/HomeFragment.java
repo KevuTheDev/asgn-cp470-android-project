@@ -3,22 +3,28 @@ package com.example.a470group.ui.home;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.a470group.R;
+import com.example.a470group.Stop;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class HomeFragment extends Fragment {
+  private GoogleMap mMap;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,29 +36,33 @@ public class HomeFragment extends Fragment {
     SupportMapFragment supportMapFragment=(SupportMapFragment)
         getChildFragmentManager().findFragmentById(R.id.google_map);
 
+
+
+
     // Async map
     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+
+
       @Override
       public void onMapReady(GoogleMap googleMap) {
+
+
         // When map is loaded
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-          @Override
-          public void onMapClick(LatLng latLng) {
-            // When clicked on map
-            // Initialize marker options
-            MarkerOptions markerOptions=new MarkerOptions();
-            // Set position of marker
-            markerOptions.position(latLng);
-            // Set title of marker
-            markerOptions.title(latLng.latitude+" : "+latLng.longitude);
-            // Remove all marker
-            googleMap.clear();
-            // Animating to zoom the marker
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-            // Add marker on map
-            googleMap.addMarker(markerOptions);
-          }
-        });
+        mMap = googleMap;
+        Stop[] stops = new Stop[4];
+        stops[1] = new Stop(43.348709,-80.311033,"Albert / Ballantyne");
+        stops[2] = new Stop(43.488146,-80.541394,"Albert / Greenbrier");
+        stops[0] = new Stop(43.490533,-80.539508,"Albert / Longwood");
+        stops[3] = new Stop(43.487633, -80.541571,"Albert / Quiet");
+
+
+
+        mMap.addMarker(new MarkerOptions().position(new LatLng(43.348709,-80.311033)).title("Albert / Ballantyne"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(43.488146,-80.541394)).title("Albert / Greenbrier"));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(stops[0].getLatLng()));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(12));
+
       }
     });
     // Return view

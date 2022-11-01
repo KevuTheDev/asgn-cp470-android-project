@@ -38,7 +38,7 @@ public class DashboardFragment extends Fragment {
 
 
   public void makeDialog(Context ctx, String stopName){
-    String[] stopTime = {"1:00","2:00","4:30"};
+    String[] stopTime = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
     LinearLayout linearLayout = new LinearLayout(ctx);
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     for( int i = 0; i <stopTime.length; i++ )
