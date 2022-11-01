@@ -121,7 +121,6 @@ public class DashboardFragment extends Fragment {
     View root = binding.getRoot();
 
 
-
     messages.add("Stop 1: Bricker Academic");
     messages.add("Stop 2: King St. North");
     messages.add("Stop 3: University Ave");
