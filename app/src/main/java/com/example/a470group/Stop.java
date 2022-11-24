@@ -6,11 +6,12 @@ public class Stop {
   private static double lng;
   private static double lat;
   private String name;
-  public Stop(double lng,double lat, String name){
+  private LatLng latlng;
+  public Stop(double lat,double lng, String name){
     this.name = name;
     this.lng = lng;
     this.lat = lat;
-
+    this.latlng = new LatLng(this.lat, this.lng);
   }
   public double getLng(){
     return this.lng;
@@ -22,6 +23,6 @@ public class Stop {
     return this.name;
   }
   public LatLng getLatLng(){
-    return new LatLng(this.lng,this.lat);
+    return this.latlng;
   }
 }

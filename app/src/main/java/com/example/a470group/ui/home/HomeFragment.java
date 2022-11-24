@@ -55,17 +55,24 @@ public class HomeFragment extends Fragment {
         stops[0] = new Stop(43.490533,-80.539508,"Albert / Longwood");
         stops[3] = new Stop(43.487633, -80.541571,"Albert / Quiet");
 
-
-
-        mMap.addMarker(new MarkerOptions().position(new LatLng(43.348709,-80.311033)).title("Albert / Ballantyne"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(43.488146,-80.541394)).title("Albert / Greenbrier"));
+        addStopMarker(stops[0]);
+        addStopMarker(stops[1]);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(stops[0].getLatLng()));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(12));
-
       }
     });
     // Return view
     return view;
+  }
+
+  /**
+   * Given a stop, will take its data and put a marker onto the map
+   * @param stop - A Stop object to convert into a marker on map
+   */
+  private void addStopMarker(Stop stop) {
+    if (stop == null) return;
+
+    mMap.addMarker(new MarkerOptions().position(stop.getLatLng()).title(stop.getName()));
   }
 }
