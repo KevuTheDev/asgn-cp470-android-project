@@ -10,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_weight="0"
+        android:layout_marginLeft="10dp"
 
+        android:layout_marginRight="10dp"
+        android:layout_weight="0"
         android:gravity="left"
         android:text="TextView"
         android:textSize="24sp" />
