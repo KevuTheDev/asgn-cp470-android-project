@@ -62,7 +62,7 @@ public class DashboardFragment extends Fragment {
     binding = null;
   }
 
-  private class DashboardAdapter extends ArrayAdapter<String>{
+  private class DashboardAdapter extends ArrayAdapter<String> {
     public DashboardAdapter(Context ctx) {
       super(ctx, 0);
     }
@@ -92,52 +92,15 @@ public class DashboardFragment extends Fragment {
           Log.i("butt",x.getText().toString());
 
           String name = x.getText().toString();
-          makeDialog(getContext(),name);
+          String[] stopTimes = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
+          makeDialog(getContext(),name, stopTimes);
         }
       });
       return result;
     }
   }
 
-  private class DialogListAdapter extends ArrayAdapter<String> {
-    public DialogListAdapter(Context ctx) {
-      super(ctx, 0);
-    }
-
-    public int getCount(){
-      return stopsList.size();
-    }
-
-    public String getItem(int position){
-      return stopsList.get(position);
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent){
-      LayoutInflater inflater = DashboardFragment.this.getLayoutInflater();
-      View result = null ;
-      TextView message;
-
-      result = inflater.inflate(R.layout.stops_row, null);
-      message = (TextView) result.findViewById(R.id.TextMessage);
-
-      message.setText(   getItem(position)  ); // get the string at position
-      message.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          TextView x = (TextView) v;
-          Log.i("butt",x.toString());
-          Log.i("butt",x.getText().toString());
-
-          String name = x.getText().toString();
-          makeDialog(getContext(),name);
-        }
-      });
-      return result;
-    }
-  }
-
-  public void makeDialog(Context ctx, String stopName){
-    String[] stopTime = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
+  public void makeDialog(Context ctx, String stopName, String[] stopTimes) {
 
     AlertDialog.Builder myCustomDialogBuilder = new AlertDialog.Builder(ctx);
     LayoutInflater myInflater = this.getLayoutInflater();
@@ -153,38 +116,20 @@ public class DashboardFragment extends Fragment {
 
     LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearLayoutDialog);
 
-    for (String s : stopTime) {
+    // Adding the stop times onto the dialog
+    for (String s : stopTimes) {
       TextView textView = new TextView(ctx);
       textView.setText(s);
       linearLayout.addView(textView);
+
+      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
+      params.setMargins(75, 5, 75, 5);
+      textView.setLayoutParams(params);
     }
+    myCustomDialogBuilder.setTitle(stopName); // set title
 
     Dialog myDialog = myCustomDialogBuilder.create();
     myDialog.show();
-//
-//
-//    LinearLayout linearLayout = new LinearLayout(ctx);
-//    linearLayout.setOrientation(LinearLayout.VERTICAL);
-//
-//    for (String s : stopTime) {
-//      TextView textView = new TextView(ctx);
-//      textView.setText(s);
-//      linearLayout.addView(textView);
-//    }
-//
-//    AlertDialog.Builder builder2 = new AlertDialog.Builder(ctx);
-//    builder2.setTitle(stopName);
-//
-//    // Add the buttons
-//    builder2.setPositiveButton("Close", new DialogInterface.OnClickListener() {
-//      public void onClick(DialogInterface dialog, int id) {
-//
-//      }
-//    });
-//
-//    AlertDialog dialog2 = builder2.create();
-//    dialog2.setView(linearLayout);
-//    dialog2.show();
   }
 
   public void onStopClick(View view){
@@ -192,5 +137,4 @@ public class DashboardFragment extends Fragment {
     Log.i("butt",x.toString());
     Log.i("butt",x.getText().toString());
   }
-
 }
