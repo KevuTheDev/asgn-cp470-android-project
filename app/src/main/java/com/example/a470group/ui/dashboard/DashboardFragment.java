@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -50,8 +51,15 @@ public class DashboardFragment extends Fragment {
     dashboardAdapter = new DashboardAdapter( root.getContext());
 
     dashboardListView = root.findViewById(R.id.listViewStops);
-    dashboardListView.setAdapter (dashboardAdapter);
+    dashboardListView.setAdapter(dashboardAdapter);
     dashboardAdapter.notifyDataSetChanged(); //this restarts the process of getCount()/
+    dashboardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        String[] stopTimes = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
+        makeDialog(getContext(), stopsList.get(i), stopTimes);
+      }
+    });
 
     return root;
   }
@@ -84,18 +92,6 @@ public class DashboardFragment extends Fragment {
       message = (TextView) result.findViewById(R.id.TextMessage);
 
       message.setText(   getItem(position)  ); // get the string at position
-      message.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          TextView x = (TextView) v;
-          Log.i("butt",x.toString());
-          Log.i("butt",x.getText().toString());
-
-          String name = x.getText().toString();
-          String[] stopTimes = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
-          makeDialog(getContext(),name, stopTimes);
-        }
-      });
       return result;
     }
   }
