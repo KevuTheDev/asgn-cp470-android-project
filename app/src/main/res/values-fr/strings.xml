@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">470 Groupe</string>
+    <string name="action_settings">Réglages</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Premier fragment</string>
+    <string name="second_fragment_label">Deuxième Fragment</string>
+    <string name="next">Prochain</string>
+    <string name="previous">Précédente</string>
+
+    <string name="hello_first_fragment">Bonjour Premier fragment</string>
+    <string name="hello_second_fragment">Bonjour Deuxieme fragment. Arg: %1$s</string>
+    <string name="title_activity_main_screen">Écran principal</string>
+    <string name="title_home">Maison</string>
+    <string name="title_dashboard">Arrêts</string>
+    <string name="title_notifications">Avis</string>
+    <string name="title_activity_maps">Activité sur les cartes</string>
+</resources>
