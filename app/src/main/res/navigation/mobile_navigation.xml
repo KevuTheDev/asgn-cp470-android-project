@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/navigation_help"
+        android:name="com.example.a470group.ui.help.HelpFragment"
+        android:label="Help"
+        tools:layout="@layout/fragment_help" />
+
+    <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.a470group.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
