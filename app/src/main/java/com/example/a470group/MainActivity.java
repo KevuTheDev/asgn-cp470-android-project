@@ -4,7 +4,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,7 @@ import com.example.a470group.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,8 +68,29 @@ public class MainActivity extends AppCompatActivity {
       return true;
     }
 
+    if (id == R.id.navigation) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(R.string.goBack);
+      builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+          // User clicked OK button
+          finish();
+        }
+      });
+      builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        public void onClick(DialogInterface dialog, int id) {
+          // User cancelled the dialog
+        }
+      });
+      AlertDialog dialog = builder.create();
+      dialog.show();
+      return true;
+    }
+
     return super.onOptionsItemSelected(item);
   }
+
+
 
   @Override
   public boolean onSupportNavigateUp() {

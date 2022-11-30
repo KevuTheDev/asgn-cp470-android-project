@@ -6,18 +6,19 @@
         <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/activity_main_screen.xml" value="0.3265625" />
         <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/activity_maps.xml" value="0.3265625" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/content_main.xml" value="0.32518115942028986" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/content_main.xml" value="0.3265625" />
         <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/dialog_dashboard_stops.xml" value="0.3265625" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_dashboard.xml" value="0.32518115942028986" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_first.xml" value="0.32518115942028986" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_home.xml" value="0.32518115942028986" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_notifications.xml" value="0.32518115942028986" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_second.xml" value="0.32518115942028986" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/help_button.xml" value="0.3255208333333333" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/stop.xml" value="0.3115942028985507" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/stops_row.xml" value="0.3115942028985507" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3265625" />
-        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/menu/menu_main.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_dashboard.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_first.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_home.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_notifications.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_second.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/fragment_third.xml" value="0.3188405797101449" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/help_button.xml" value="0.3188405797101449" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/stop.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/layout/stops_row.xml" value="0.3265625" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
+        <entry key="..\:/Users/rayx7/cp470group/app/src/main/res/menu/menu_main.xml" value="0.14666666666666667" />
       </map>
     </option>
   </component>

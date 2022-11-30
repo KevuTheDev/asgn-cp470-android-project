@@ -11,8 +11,8 @@
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="@string/title_dashboard" />
 
-    <item android:id="@+id/action_one"
-        android:title="Help"
+    <item android:id="@+id/navigation"
         android:icon="@drawable/help"
+        android:title="Help"
         />
 </menu>

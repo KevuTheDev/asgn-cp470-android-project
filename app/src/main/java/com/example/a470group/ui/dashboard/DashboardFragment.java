@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.a470group.R;
 import com.example.a470group.databinding.FragmentDashboardBinding;
+import com.example.a470group.ui.home.HomeFragment;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,7 @@ public class DashboardFragment extends Fragment {
   private ListView dashboardListView;
   private DashboardAdapter dashboardAdapter;
   private ArrayList<String> stopsList = new ArrayList<String>();
+  private Dialog alert;
 
   @Nullable
   @Override
@@ -60,6 +62,7 @@ public class DashboardFragment extends Fragment {
         makeDialog(getContext(), stopsList.get(i), stopTimes);
       }
     });
+
 
     return root;
   }
