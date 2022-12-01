@@ -90,9 +90,6 @@ public class HomeFragment extends Fragment implements
   private void addStopMarker(Stop stop) {
     if (stop == null) return;
 
-    MarkerOptions b = new MarkerOptions();
-    b.snippet("hello");
-
     mMap.addMarker(new MarkerOptions().position(stop.getLatLng()).title(stop.getName()));
   }
 
