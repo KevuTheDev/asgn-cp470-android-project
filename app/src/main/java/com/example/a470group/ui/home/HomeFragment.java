@@ -1,10 +1,10 @@
 package com.example.a470group.ui.home;
 
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,16 +19,11 @@ import android.widget.Toast;
 
 import com.example.a470group.R;
 import com.example.a470group.Stop;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.security.Permission;
 
 public class HomeFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -37,6 +32,9 @@ public class HomeFragment extends Fragment implements
   protected static final String FRAGMENT_NAME = "HomeFragment";
   private static final int DEFAULT_ZOOM = 15;
   private GoogleMap mMap;
+
+  final int minTime = 200;
+  final int minDistance = 10;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +64,7 @@ public class HomeFragment extends Fragment implements
     mMap.setOnMyLocationClickListener(this);
 
     //mMap.setMyLocationEnabled(true);
+    checkLocationPermission();
 
     // When map is loaded
     Stop[] stops = new Stop[4];
@@ -95,6 +94,31 @@ public class HomeFragment extends Fragment implements
     b.snippet("hello");
 
     mMap.addMarker(new MarkerOptions().position(stop.getLatLng()).title(stop.getName()));
+  }
+
+  private void checkLocationPermission() {
+    // checks if device has minimum sdk version
+    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        return;
+
+    // checks if device have valid permissions for use
+    if(ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+      Log.d(FRAGMENT_NAME, "YES");
+    }else {
+      // otherwise will ask the device user for permissions
+
+      requestPermissions(
+              new String[]{Manifest.permission
+                      .ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+
+      // a boolean function to detect if the permission is not given
+      // this function can be used to bring up a rationale
+      // https://developer.android.com/reference/androidx/core/app/ActivityCompat#shouldShowRequestPermissionRationale(android.app.Activity,%20java.lang.String)
+      shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
   }
 
   @Override
