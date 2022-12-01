@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment implements
     Log.d(FRAGMENT_NAME, "onCreateView Created");
 
     // Initialize view
-    View view=inflater.inflate(R.layout.fragment_first, container, false);
+    View view=inflater.inflate(R.layout.fragment_home, container, false);
 
     // Initialize map fragment
     SupportMapFragment supportMapFragment=(SupportMapFragment)
