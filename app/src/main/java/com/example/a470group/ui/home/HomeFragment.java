@@ -29,36 +29,31 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.Objects;
+
 public class HomeFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback{
   protected static final String FRAGMENT_NAME = "HomeFragment";
   private static final int DEFAULT_ZOOM = 15;
+  private static final int WIDE_ZOOM = 14;
   private GoogleMap mMap;
 
-  // Register the permissions callback, which handles the user's response to the
-  // system permissions dialog. Save the return value, an instance of
-  // ActivityResultLauncher, as an instance variable.
-  private ActivityResultLauncher<String> requestPermissionLauncher =
+  private boolean PERMISSION_GRANTED = false;
+  
+  private final LatLng waterloo = new LatLng(43.47287253812701, -80.53814926494488);
+
+  private final ActivityResultLauncher<String> requestPermissionLauncher =
           registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
-              // Permission is granted. Continue the action or workflow in your
-              // app.
+              PERMISSION_GRANTED = true;
+              checkLocationPermission();
             } else {
-              Toast.makeText(this.getActivity().getApplicationContext(), "You may use a custom location.", Toast.LENGTH_LONG).show();
-              // Explain to the user that the feature is unavailable because the
-              // feature requires a permission that the user has denied. At the
-              // same time, respect the user's decision. Don't link to system
-              // settings in an effort to convince the user to change their
-              // decision.
+              Toast.makeText(this.requireActivity().getApplicationContext(), "You may use a custom location.", Toast.LENGTH_LONG).show();
+              PERMISSION_GRANTED = false;
             }
           });
-
-
-
-  final int minTime = 200;
-  final int minDistance = 10;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +67,7 @@ public class HomeFragment extends Fragment implements
     SupportMapFragment supportMapFragment=(SupportMapFragment)
         getChildFragmentManager().findFragmentById(R.id.google_map);
 
+    assert supportMapFragment != null;
     supportMapFragment.getMapAsync(this);
 
     if (mMap != null) {
@@ -104,8 +100,7 @@ public class HomeFragment extends Fragment implements
     addStopMarker(stops[2]);
     addStopMarker(stops[3]);
 
-    // Zoom to the given latlng,
-    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(stops[2].getLatLng(), DEFAULT_ZOOM));
+    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
 
   /**
@@ -118,8 +113,6 @@ public class HomeFragment extends Fragment implements
     mMap.addMarker(new MarkerOptions().position(stop.getLatLng()).title(stop.getName()));
   }
 
-
-
   @SuppressLint("MissingPermission")
   private void checkLocationPermission() {
     if(ContextCompat.checkSelfPermission(this.requireActivity().getApplicationContext(),
@@ -127,44 +120,24 @@ public class HomeFragment extends Fragment implements
             ContextCompat.checkSelfPermission(this.requireActivity().getApplicationContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
       Log.d(FRAGMENT_NAME, "Permission Granted");
-      // You can use the API that requires the permission.
-
-      //performAction(...);
       mMap.setMyLocationEnabled(true);
 
-
-      mMap.getMyLocation();
-
-    } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-      // In an educational UI, explain to the user why your app requires this
-      // permission for a specific feature to behave as expected, and what
-      // features are disabled if it's declined. In this UI, include a
-      // "cancel" or "no thanks" button that lets the user continue
-      // using your app without granting the permission.
-      Log.d(FRAGMENT_NAME, "None");
-
-      //showInContextUI(...);
-    } else {
-      // You can directly ask for the permission.
-      // The registered ActivityResultCallback gets the result of this request.
-      requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-      Log.d(FRAGMENT_NAME, "hmm");
+      Location myLocation = mMap.getMyLocation();
+      return;
     }
 
+      requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+      Log.d(FRAGMENT_NAME, "hmm");
   }
-
-
 
   @Override
   public boolean onMyLocationButtonClick() {
-    Toast.makeText(this.getActivity().getApplicationContext(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-    // Return false so that we don't consume the event and the default behavior still occurs
-    // (the camera animates to the user's current position).
+    Toast.makeText(this.requireActivity().getApplicationContext(), "MyLocation button clicked", Toast.LENGTH_SHORT).show();
     return false;
   }
 
   @Override
   public void onMyLocationClick(@NonNull Location location) {
-    Toast.makeText(this.getActivity().getApplicationContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    Toast.makeText(this.requireActivity().getApplicationContext(), "Current location:\n" + location, Toast.LENGTH_LONG).show();
   }
 }
