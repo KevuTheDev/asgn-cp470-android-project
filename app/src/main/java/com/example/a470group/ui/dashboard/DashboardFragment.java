@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,11 +26,19 @@ import com.example.a470group.R;
 import com.example.a470group.databinding.FragmentDashboardBinding;
 import com.example.a470group.ui.home.HomeFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DashboardFragment extends Fragment {
   //todo : Change variables ot match the content of the class
   protected static final String FRAGMENT_NAME = "DashboardFragment";
+  protected static final String GET_JSON = "JSON Start: ";
+
   private FragmentDashboardBinding binding;
   private ListView dashboardListView;
   private DashboardAdapter dashboardAdapter;
@@ -46,6 +55,24 @@ public class DashboardFragment extends Fragment {
     binding = FragmentDashboardBinding.inflate(inflater, container, false);
     View root = binding.getRoot();
 
+    /*
+    * This will load the bus data from the raw json data
+    * After loading data, data wil be passed to the stops fragment to display information
+    * */
+    Resources res = getResources();
+
+    InputStream is = res.openRawResource(R.raw.stops);
+
+    Scanner scanner = new Scanner(is);
+
+    StringBuilder builder = new StringBuilder();
+
+    while(scanner.hasNextLine()) {
+      builder.append(scanner.nextLine());
+    }
+    parseJson(builder.toString());
+
+
     stopsList.add("Stop 1: Bricker Academic");
     stopsList.add("Stop 2: King St. North");
     stopsList.add("Stop 3: University Ave");
@@ -60,12 +87,49 @@ public class DashboardFragment extends Fragment {
       public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         String[] stopTimes = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
         makeDialog(getContext(), stopsList.get(i), stopTimes);
+        Log.d(FRAGMENT_NAME, "!!!!!!!!!!!");
       }
     });
 
-
     return root;
   }
+  private void parseJson(String s){
+    Log.i(FRAGMENT_NAME,"");
+
+    StringBuilder builder = new StringBuilder();
+
+    try{
+      JSONObject root = new JSONObject(s);
+
+      JSONArray allStops = root.getJSONArray("allStops");
+
+
+      Log.d(FRAGMENT_NAME, allStops.toString());
+
+      for(int i = 0 ; i < allStops.length(); ++i){
+        root = allStops.getJSONObject(i);
+        JSONArray test = root.getJSONArray("location");
+
+        // This return the Location of Stops
+        Log.d(FRAGMENT_NAME, root.getString("location"));
+
+        // This return the Title of Stops
+
+        // This return the Schedule of Stops
+        Log.d(FRAGMENT_NAME, root.getString("schedule"));
+
+        // This return the Week of Stops
+        Log.d(FRAGMENT_NAME, root.getString("schedule"));
+      }
+
+      //Log.d(FRAGMENT_NAME , allStops.getString("location"));
+      builder.append(allStops);
+
+    }catch(JSONException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   @Override
   public void onDestroyView() {
