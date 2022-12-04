@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.a470group.R;
 import com.example.a470group.databinding.FragmentDashboardBinding;
-import com.example.a470group.ui.home.HomeFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,8 +91,9 @@ public class DashboardFragment extends Fragment {
 
     return root;
   }
+
+  // This loads json to stops
   private void parseJson(String s){
-    Log.i(FRAGMENT_NAME,"");
 
     StringBuilder builder = new StringBuilder();
 
@@ -104,22 +103,36 @@ public class DashboardFragment extends Fragment {
       JSONArray allStops = root.getJSONArray("allStops");
 
 
-      Log.d(FRAGMENT_NAME, allStops.toString());
-
       for(int i = 0 ; i < allStops.length(); ++i){
         root = allStops.getJSONObject(i);
-        JSONArray test = root.getJSONArray("location");
 
-        // This return the Location of Stops
+
+        // This return the (Latitude, Longitude) of Stops
+        Log.d(FRAGMENT_NAME, "!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         Log.d(FRAGMENT_NAME, root.getString("location"));
+        JSONObject location = new JSONObject(root.getString("location"));
+        long latitude = location.getLong("latitude");
+        long longitude = location.getLong("longitude");
+        Log.d(FRAGMENT_NAME, location.getString("latitude"));
+        Log.d(FRAGMENT_NAME, location.getString("longitude"));
+
 
         // This return the Title of Stops
+        String stopTitle = root.getString("title");
 
-        // This return the Schedule of Stops
-        Log.d(FRAGMENT_NAME, root.getString("schedule"));
+        // This return the description of Stops
+        String description = root.getString("description");
 
-        // This return the Week of Stops
-        Log.d(FRAGMENT_NAME, root.getString("schedule"));
+        // This return the (Schedule and Week) of Stops
+        JSONObject schedule = new JSONObject(root.getString("schedule"));
+        JSONArray week = schedule.getJSONArray("week");
+        //Log.d(FRAGMENT_NAME, week.toString());
+        for(int runningTime = 0 ; runningTime < week.length(); ++runningTime) {
+          Log.d(FRAGMENT_NAME, week.get(runningTime).toString());
+
+        }
+
       }
 
       //Log.d(FRAGMENT_NAME , allStops.getString("location"));
