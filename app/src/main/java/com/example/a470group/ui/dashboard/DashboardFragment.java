@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.a470group.R;
+import com.example.a470group.Stop;
 import com.example.a470group.databinding.FragmentDashboardBinding;
 
 import org.json.JSONArray;

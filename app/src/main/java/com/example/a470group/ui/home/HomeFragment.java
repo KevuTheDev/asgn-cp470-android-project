@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.example.a470group.MainScreen;
 import com.example.a470group.R;
 import com.example.a470group.Stop;
 import com.example.a470group.ui.dashboard.DashboardFragment;
@@ -102,8 +103,6 @@ public class HomeFragment extends Fragment implements
     }
 
 
-
-
     return view;
   }
 
@@ -154,70 +153,10 @@ public class HomeFragment extends Fragment implements
 
     checkLocationPermission();
 
-    // Get the longitude and latitude from json
-    Resources res = getResources();
-
-    InputStream is = res.openRawResource(R.raw.stops);
-
-    Scanner scanner = new Scanner(is);
-
-    StringBuilder builder = new StringBuilder();
-
-    while(scanner.hasNextLine()) {
-      builder.append(scanner.nextLine());
+    for (Stop stop : MainScreen.stops) {
+      addStopMarker(stop);
     }
-    //parseJson(builder.toString());
-    String s = builder.toString();
-    Stop[] stops = new Stop[4];
-    try {
-      JSONObject rootJson = new JSONObject(s);
 
-      JSONArray allStops = rootJson.getJSONArray("allStops");
-
-      ArrayList<ArrayList<String>> dayList = new ArrayList<ArrayList<String>>(10);
-
-      for (int i = 0; i < allStops.length(); ++i) {
-        rootJson = allStops.getJSONObject(i);
-
-
-        // This return the (Latitude, Longitude) of Stops
-
-        Log.d(FRAGMENT_NAME, rootJson.getString("location"));
-        JSONObject location = new JSONObject(rootJson.getString("location"));
-        double latitude = location.getDouble("latitude");
-        double longitude = location.getDouble("longitude");
-//        Log.d(FRAGMENT_NAME, location.getString("latitude"));
-//        Log.d(FRAGMENT_NAME, location.getString("longitude"));
-        Log.d(FRAGMENT_NAME, rootJson.getString("description"));
-        //String stopName = rootJson.getString("desctiption");
-
-        // add markers
-
-        //Stop stopsMarker = new Stop(latitude, longitude, stopName);
-        stops[i] = new Stop(latitude, longitude, rootJson.getString("description"));
-        addStopMarker(stops[i]);
-
-      }
-    }catch(JSONException e){
-      e.printStackTrace();
-    }
-    Log.d(FRAGMENT_NAME, String.valueOf(stops[0].getLat()) + "_________________");
-    Log.d(FRAGMENT_NAME, String.valueOf(stops.length));
-
-//    Stop[] stops = new Stop[4];
-//    stops[0] = new Stop(43.491552,-80.537559,"Albert / Weber");
-//    stops[1] = new Stop(43.490533,-80.539508,"Albert / Longwood");
-//    stops[2] = new Stop(43.488146,-80.541394,"Albert / Greenbrier");
-//    stops[3] = new Stop(43.487633,-80.541571,"Albert / Quiet");
-
-//
-//    // add markers
-    for (int i = 0 ; i < stops.length ; ++i) {
-      addStopMarker(stops[i]);
-    }
-//    addStopMarker(stops[1]);
-//    addStopMarker(stops[2]);
-//    addStopMarker(stops[3]);
 
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
