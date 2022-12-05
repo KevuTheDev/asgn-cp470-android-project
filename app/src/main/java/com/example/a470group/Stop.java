@@ -1,6 +1,11 @@
 package com.example.a470group;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * The type Stop.
@@ -10,6 +15,7 @@ public class Stop {
   private static double lat;
   private String name;
   private LatLng latlng;
+  private ArrayList<Route> routes;
 
   /**
    * Instantiates a new Stop.
@@ -18,11 +24,10 @@ public class Stop {
    * @param lng  the lng
    * @param name the name
    */
-  public Stop(double lat,double lng, String name){
+  public Stop(double lat, double lng, String name, ArrayList<Route> routes){
     this.name = name;
-    this.lng = lng;
-    this.lat = lat;
-    this.latlng = new LatLng(this.lat, this.lng);
+    this.latlng = new LatLng(lat, lng);
+    this.routes = routes;
   }
 
   /**
@@ -31,7 +36,7 @@ public class Stop {
    * @return the double
    */
   public double getLng(){
-    return this.lng;
+    return this.latlng.longitude;
   }
 
   /**
@@ -40,7 +45,7 @@ public class Stop {
    * @return the double
    */
   public double getLat(){
-    return this.lat;
+    return this.latlng.latitude;
   }
 
   /**
@@ -59,5 +64,15 @@ public class Stop {
    */
   public LatLng getLatLng(){
     return this.latlng;
+  }
+
+  @NonNull
+  public String toString() {
+    StringBuilder output = new StringBuilder("Stop: " + this.name + " | " + getLat() + ", " + getLng() + "\n");
+    for (Route route : routes) {
+      output.append(routes.toString()).append("\n");
+    }
+
+    return output.toString();
   }
 }

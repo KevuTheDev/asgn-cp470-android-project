@@ -26,6 +26,7 @@ import java.util.Scanner;
  * The type Main screen.
  */
 public class MainScreen extends AppCompatActivity {
+  protected static final String ACTIVITY_NAME = "MainScreen";
   private ActivityMainScreenBinding binding;
   public static ArrayList<Stop> stops = new ArrayList<>();
 
@@ -64,25 +65,48 @@ public class MainScreen extends AppCompatActivity {
     try {
       JSONObject rootJson = new JSONObject(s);
       JSONArray allStops = rootJson.getJSONArray("allStops");
-      ArrayList<ArrayList<String>> dayList = new ArrayList<ArrayList<String>>(10);
 
       for (int i = 0; i < allStops.length(); ++i) {
         rootJson = allStops.getJSONObject(i);
 
+        String title = rootJson.getString("title");
 
-        // This return the (Latitude, Longitude) of Stops
-
+        // LOCATION
         JSONObject location = new JSONObject(rootJson.getString("location"));
         double latitude = location.getDouble("latitude");
         double longitude = location.getDouble("longitude");
-//        Log.d(FRAGMENT_NAME, location.getString("latitude"));
-//        Log.d(FRAGMENT_NAME, location.getString("longitude"));
-        //String stopName = rootJson.getString("desctiption");
 
-        // add markers
+        // ROUTES
+        JSONArray rootRoutes = rootJson.getJSONArray("routes");
+        ArrayList<Route> routes = new ArrayList<Route>();
+
+        // looping routes
+        for (int j = 0; j < rootRoutes.length(); j++) {
+          JSONObject aRoute = rootRoutes.getJSONObject(j);
+          int aRouteID = aRoute.getInt("stop_route_id");
+
+          // SCHEDULES
+          JSONArray rootSchedules = aRoute.getJSONArray("schedule");
+          ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+
+          for (int k = 0; k < rootSchedules.length(); k++) {
+            JSONObject aSchedule = rootSchedules.getJSONObject(k);
+            String aSchedule_day = aSchedule.getString("day");
+            String aSchedule_arrival = aSchedule.getString("arrival_time");
+
+            Schedule outSchedule = new Schedule(aSchedule_day, aSchedule_arrival);
+            schedules.add(outSchedule);
+          }
+
+          // Store schedules onto routes
+
+          Route outRoute = new Route(aRouteID, schedules);
+          routes.add(outRoute);
+        }
 
         //Stop stopsMarker = new Stop(latitude, longitude, stopName);
-        stops.add(new Stop(latitude, longitude, rootJson.getString("title")));
+        stops.add(new Stop(latitude, longitude, title, routes));
+        Log.d(ACTIVITY_NAME, stops.get(i).toString());
 
       }
     }catch(JSONException e){
