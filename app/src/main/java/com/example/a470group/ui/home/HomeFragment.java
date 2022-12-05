@@ -1,36 +1,38 @@
 package com.example.a470group.ui.home;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.a470group.R;
 import com.example.a470group.Stop;
+import com.example.a470group.ui.dialog.CustomAboutDialogFragment;
+import com.example.a470group.ui.dialog.CustomFutureDialogFragment;
+import com.example.a470group.ui.dialog.CustomHelpDialogFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.Objects;
 
 public class HomeFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
@@ -57,6 +59,12 @@ public class HomeFragment extends Fragment implements
           });
 
   @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     Log.d(FRAGMENT_NAME, "onCreateView Created");
@@ -76,6 +84,43 @@ public class HomeFragment extends Fragment implements
     }
 
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    menu.add(getString(R.string.home_menu_option1));
+    menu.add(getString(R.string.home_menu_option3));
+    menu.add(getString(R.string.home_menu_option2));
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    CharSequence title = item.getTitle();
+    if (title.equals(getString(R.string.home_menu_option1))) {
+      helpDialog();
+    } else if (title.equals(getString(R.string.home_menu_option2))) {
+      aboutDialog();
+    }else if (title.equals(getString(R.string.home_menu_option3))) {
+      futureDialog();
+    }
+    return true;
+  }
+
+  private void helpDialog() {
+    new CustomHelpDialogFragment().show(
+            getChildFragmentManager(), CustomHelpDialogFragment.TAG);
+  }
+
+  private void aboutDialog() {
+    new CustomAboutDialogFragment().show(
+            getChildFragmentManager(), CustomAboutDialogFragment.TAG);
+  }
+
+  private void futureDialog() {
+    new CustomFutureDialogFragment().show(
+            getChildFragmentManager(), CustomFutureDialogFragment.TAG
+    );
   }
 
   @Override

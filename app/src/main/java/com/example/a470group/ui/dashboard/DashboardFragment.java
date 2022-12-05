@@ -147,13 +147,6 @@ public class DashboardFragment extends Fragment {
       e.printStackTrace();
     }
 
-
-    stopsList.add("Stop 1: Bricker Academic");
-    stopsList.add("Stop 2: King St. North");
-    stopsList.add("Stop 3: University Ave");
-
-
-
     return root;
   }
 
