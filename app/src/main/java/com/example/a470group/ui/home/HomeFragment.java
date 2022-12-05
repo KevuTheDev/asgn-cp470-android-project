@@ -157,7 +157,7 @@ public class HomeFragment extends Fragment implements
     // Get the longitude and latitude from json
     Resources res = getResources();
 
-    InputStream is = res.openRawResource(R.raw.stops);
+    InputStream is = res.openRawResource(R.raw.stopdata2);
 
     Scanner scanner = new Scanner(is);
 
@@ -168,7 +168,7 @@ public class HomeFragment extends Fragment implements
     }
     //parseJson(builder.toString());
     String s = builder.toString();
-    Stop[] stops = new Stop[4];
+    Stop[] stops = new Stop[5000];
     try {
       JSONObject rootJson = new JSONObject(s);
 
@@ -188,13 +188,13 @@ public class HomeFragment extends Fragment implements
         double longitude = location.getDouble("longitude");
 //        Log.d(FRAGMENT_NAME, location.getString("latitude"));
 //        Log.d(FRAGMENT_NAME, location.getString("longitude"));
-        Log.d(FRAGMENT_NAME, rootJson.getString("description"));
+        Log.d(FRAGMENT_NAME, rootJson.getString("title"));
         //String stopName = rootJson.getString("desctiption");
 
         // add markers
 
         //Stop stopsMarker = new Stop(latitude, longitude, stopName);
-        stops[i] = new Stop(latitude, longitude, rootJson.getString("description"));
+        stops[i] = new Stop(latitude, longitude, rootJson.getString("title"));
         addStopMarker(stops[i]);
 
       }
@@ -204,20 +204,10 @@ public class HomeFragment extends Fragment implements
     Log.d(FRAGMENT_NAME, String.valueOf(stops[0].getLat()) + "_________________");
     Log.d(FRAGMENT_NAME, String.valueOf(stops.length));
 
-//    Stop[] stops = new Stop[4];
-//    stops[0] = new Stop(43.491552,-80.537559,"Albert / Weber");
-//    stops[1] = new Stop(43.490533,-80.539508,"Albert / Longwood");
-//    stops[2] = new Stop(43.488146,-80.541394,"Albert / Greenbrier");
-//    stops[3] = new Stop(43.487633,-80.541571,"Albert / Quiet");
-
-//
-//    // add markers
     for (int i = 0 ; i < stops.length ; ++i) {
       addStopMarker(stops[i]);
     }
-//    addStopMarker(stops[1]);
-//    addStopMarker(stops[2]);
-//    addStopMarker(stops[3]);
+
 
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
