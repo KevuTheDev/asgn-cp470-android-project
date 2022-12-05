@@ -1,5 +1,6 @@
 package com.example.a470group.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -21,7 +22,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.a470group.MainScreen;
 import com.example.a470group.R;
+import com.example.a470group.Route;
+import com.example.a470group.Schedule;
+import com.example.a470group.Stop;
 import com.example.a470group.databinding.FragmentDashboardBinding;
 
 import org.json.JSONArray;
@@ -49,7 +54,6 @@ public class DashboardFragment extends Fragment {
   private FragmentDashboardBinding binding;
   private ListView dashboardListView;
   private DashboardAdapter dashboardAdapter;
-  private ArrayList<String> stopsList = new ArrayList<String>();
   private Dialog alert;
 
   @Nullable
@@ -62,79 +66,7 @@ public class DashboardFragment extends Fragment {
     binding = FragmentDashboardBinding.inflate(inflater, container, false);
     View root = binding.getRoot();
 
-    /*
-    * This will load the bus data from the raw json data
-    * After loading data, data wil be passed to the stops fragment to display information
-    * */
-    Resources res = getResources();
 
-    InputStream is = res.openRawResource(R.raw.stops);
-
-    Scanner scanner = new Scanner(is);
-
-    StringBuilder builder = new StringBuilder();
-
-    while(scanner.hasNextLine()) {
-      builder.append(scanner.nextLine());
-    }
-    //parseJson(builder.toString());
-    String s = builder.toString();
-
-
-    try{
-      JSONObject rootJson = new JSONObject(s);
-
-      JSONArray allStops = rootJson.getJSONArray("allStops");
-
-      ArrayList<ArrayList<String>> dayList = new ArrayList<ArrayList<String>>(10);
-
-      for(int i = 0 ; i < allStops.length(); ++i){
-        rootJson = allStops.getJSONObject(i);
-
-
-        // This return the (Latitude, Longitude) of Stops
-
-        Log.d(FRAGMENT_NAME, rootJson.getString("location"));
-        JSONObject location = new JSONObject(rootJson.getString("location"));
-        long latitude = location.getLong("latitude");
-        long longitude = location.getLong("longitude");
-//        Log.d(FRAGMENT_NAME, location.getString("latitude"));
-//        Log.d(FRAGMENT_NAME, location.getString("longitude"));
-
-
-        // This return the Title of Stops
-        String stopTitle = rootJson.getString("title");
-        stopsList.add(stopTitle);
-        Log.d(FRAGMENT_NAME, stopTitle);
-
-        // Get the stop route id
-
-
-        JSONObject schedule = new JSONObject(rootJson.getString("schedule"));
-        JSONArray week = schedule.getJSONArray("week");
-        Log.d(FRAGMENT_NAME, "-----------------------------");
-        Log.d(FRAGMENT_NAME, week.toString());
-        int count = 0 ;
-
-        String[] weekendName = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        ArrayList<String> daySchedule = new ArrayList<String>(7);
-
-        for(int runningTime = 0 ; runningTime < week.length(); ++runningTime) {
-
-          String info = weekendName[count] + " : " + week.get(runningTime).toString();
-          daySchedule.add(info);
-
-          //Log.d(FRAGMENT_NAME, info);
-
-          ///////
-
-          count += 1 ;
-        }
-        dayList.add(daySchedule);
-        Log.d(FRAGMENT_NAME, "DayList: " +dayList.toString() + "<<<------------- (1)");
-
-      }
-      Log.d(FRAGMENT_NAME, dayList.toString() + "<<<------------- (2)");
       dashboardAdapter = new DashboardAdapter( root.getContext());
 
       dashboardListView = root.findViewById(R.id.listViewStops);
@@ -143,18 +75,12 @@ public class DashboardFragment extends Fragment {
       dashboardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-          Log.i(FRAGMENT_NAME, dayList.toString());
-          makeDialog(getContext(), stopsList.get(i), dayList.get(i));
+
+          makeDialog(getContext(), MainScreen.stops.get(i));
           Log.d(FRAGMENT_NAME, "!!!!!!!!!!!");
         }
       });
 
-      //Log.d(FRAGMENT_NAME , allStops.getString("location"));
-      builder.append(allStops);
-
-    }catch(JSONException e) {
-      e.printStackTrace();
-    }
 
     return root;
   }
@@ -166,7 +92,7 @@ public class DashboardFragment extends Fragment {
     binding = null;
   }
 
-  private class DashboardAdapter extends ArrayAdapter<String> {
+  private class DashboardAdapter extends ArrayAdapter<Stop> {
     /**
      * Instantiates a new Dashboard adapter.
      *
@@ -177,11 +103,11 @@ public class DashboardFragment extends Fragment {
     }
 
     public int getCount(){
-      return stopsList.size();
+      return MainScreen.stops.size();
     }
 
-    public String getItem(int position){
-      return stopsList.get(position);
+    public Stop getItem(int position){
+      return MainScreen.stops.get(position);
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
@@ -192,7 +118,7 @@ public class DashboardFragment extends Fragment {
       result = inflater.inflate(R.layout.stops_row, null);
       message = (TextView) result.findViewById(R.id.TextMessage);
 
-      message.setText(   getItem(position)  ); // get the string at position
+      message.setText(   getItem(position).getName()  ); // get the string at position
       return result;
     }
   }
@@ -201,10 +127,9 @@ public class DashboardFragment extends Fragment {
    * Make dialog.
    *
    * @param ctx       the ctx
-   * @param stopName  the stop name
-   * @param stopTimes the stop times
    */
-  public void makeDialog(Context ctx, String stopName, ArrayList<String> stopTimes) {
+  @SuppressLint("SetTextI18n")
+  public void makeDialog(Context ctx, Stop myStop) {
 
     AlertDialog.Builder myCustomDialogBuilder = new AlertDialog.Builder(ctx);
     LayoutInflater myInflater = this.getLayoutInflater();
@@ -220,17 +145,27 @@ public class DashboardFragment extends Fragment {
 
     LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearLayoutDialog);
 
-    // Adding the stop times onto the dialog
-    for (String s : stopTimes) {
+    //  Adding the stop times onto the dialog
+    for (Route r : myStop.getRoutes()) {
       TextView textView = new TextView(ctx);
-      textView.setText(s);
+      textView.setText("Stop ID: " + r.getStopID());
       linearLayout.addView(textView);
 
       LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
       params.setMargins(75, 5, 75, 5);
       textView.setLayoutParams(params);
+
+      for (Schedule s: r.getSchedules()) {
+        TextView textView1 = new TextView(ctx);
+        textView1.setText(s.getDay() + ":\n" + s.getArrivalTime());
+        linearLayout.addView(textView1);
+
+        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) textView1.getLayoutParams();
+        params1.setMargins(75, 5, 75, 5);
+        textView1.setLayoutParams(params1);
+      }
     }
-    myCustomDialogBuilder.setTitle(stopName); // set title
+    myCustomDialogBuilder.setTitle(myStop.getName()); // set title
 
     Dialog myDialog = myCustomDialogBuilder.create();
     myDialog.show();
