@@ -68,72 +68,77 @@ public class DashboardFragment extends Fragment {
     while(scanner.hasNextLine()) {
       builder.append(scanner.nextLine());
     }
-    parseJson(builder.toString());
+    //parseJson(builder.toString());
+    String s = builder.toString();
 
-
-    stopsList.add("Stop 1: Bricker Academic");
-    stopsList.add("Stop 2: King St. North");
-    stopsList.add("Stop 3: University Ave");
-
-    dashboardAdapter = new DashboardAdapter( root.getContext());
-
-    dashboardListView = root.findViewById(R.id.listViewStops);
-    dashboardListView.setAdapter(dashboardAdapter);
-    dashboardAdapter.notifyDataSetChanged(); //this restarts the process of getCount()/
-    dashboardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        String[] stopTimes = {"1:00am : Bus 1","2:00am : Bus 1","4:30pm : Bus 5"};
-        makeDialog(getContext(), stopsList.get(i), stopTimes);
-        Log.d(FRAGMENT_NAME, "!!!!!!!!!!!");
-      }
-    });
-
-    return root;
-  }
-
-  // This loads json to stops
-  private void parseJson(String s){
-
-    StringBuilder builder = new StringBuilder();
 
     try{
-      JSONObject root = new JSONObject(s);
+      JSONObject rootJson = new JSONObject(s);
 
-      JSONArray allStops = root.getJSONArray("allStops");
+      JSONArray allStops = rootJson.getJSONArray("allStops");
 
+      ArrayList<ArrayList<String>> dayList = new ArrayList<ArrayList<String>>(10);
 
       for(int i = 0 ; i < allStops.length(); ++i){
-        root = allStops.getJSONObject(i);
+        rootJson = allStops.getJSONObject(i);
 
 
         // This return the (Latitude, Longitude) of Stops
-        Log.d(FRAGMENT_NAME, "!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        Log.d(FRAGMENT_NAME, root.getString("location"));
-        JSONObject location = new JSONObject(root.getString("location"));
+        Log.d(FRAGMENT_NAME, rootJson.getString("location"));
+        JSONObject location = new JSONObject(rootJson.getString("location"));
         long latitude = location.getLong("latitude");
         long longitude = location.getLong("longitude");
-        Log.d(FRAGMENT_NAME, location.getString("latitude"));
-        Log.d(FRAGMENT_NAME, location.getString("longitude"));
+//        Log.d(FRAGMENT_NAME, location.getString("latitude"));
+//        Log.d(FRAGMENT_NAME, location.getString("longitude"));
 
 
         // This return the Title of Stops
-        String stopTitle = root.getString("title");
+        String stopTitle = rootJson.getString("title");
+        stopsList.add(stopTitle);
+        Log.d(FRAGMENT_NAME, stopTitle);
 
-        // This return the description of Stops
-        String description = root.getString("description");
+        // Get the stop route id
 
-        // This return the (Schedule and Week) of Stops
-        JSONObject schedule = new JSONObject(root.getString("schedule"));
+
+        JSONObject schedule = new JSONObject(rootJson.getString("schedule"));
         JSONArray week = schedule.getJSONArray("week");
-        //Log.d(FRAGMENT_NAME, week.toString());
-        for(int runningTime = 0 ; runningTime < week.length(); ++runningTime) {
-          Log.d(FRAGMENT_NAME, week.get(runningTime).toString());
+        Log.d(FRAGMENT_NAME, "-----------------------------");
+        Log.d(FRAGMENT_NAME, week.toString());
+        int count = 0 ;
 
+        String[] weekendName = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        ArrayList<String> daySchedule = new ArrayList<String>(7);
+
+        for(int runningTime = 0 ; runningTime < week.length(); ++runningTime) {
+
+          String info = weekendName[count] + " : " + week.get(runningTime).toString();
+          daySchedule.add(info);
+
+          //Log.d(FRAGMENT_NAME, info);
+
+          ///////
+
+          count += 1 ;
         }
+        dayList.add(daySchedule);
+        Log.d(FRAGMENT_NAME, "DayList: " +dayList.toString() + "<<<------------- (1)");
 
       }
+      Log.d(FRAGMENT_NAME, dayList.toString() + "<<<------------- (2)");
+      dashboardAdapter = new DashboardAdapter( root.getContext());
+
+      dashboardListView = root.findViewById(R.id.listViewStops);
+      dashboardListView.setAdapter(dashboardAdapter);
+      dashboardAdapter.notifyDataSetChanged(); //this restarts the process of getCount()/
+      dashboardListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+          Log.i(FRAGMENT_NAME, dayList.toString());
+          makeDialog(getContext(), stopsList.get(i), dayList.get(i));
+          Log.d(FRAGMENT_NAME, "!!!!!!!!!!!");
+        }
+      });
 
       //Log.d(FRAGMENT_NAME , allStops.getString("location"));
       builder.append(allStops);
@@ -141,6 +146,15 @@ public class DashboardFragment extends Fragment {
     }catch(JSONException e) {
       e.printStackTrace();
     }
+
+
+    stopsList.add("Stop 1: Bricker Academic");
+    stopsList.add("Stop 2: King St. North");
+    stopsList.add("Stop 3: University Ave");
+
+
+
+    return root;
   }
 
 
@@ -176,7 +190,7 @@ public class DashboardFragment extends Fragment {
     }
   }
 
-  public void makeDialog(Context ctx, String stopName, String[] stopTimes) {
+  public void makeDialog(Context ctx, String stopName, ArrayList<String> stopTimes) {
 
     AlertDialog.Builder myCustomDialogBuilder = new AlertDialog.Builder(ctx);
     LayoutInflater myInflater = this.getLayoutInflater();
