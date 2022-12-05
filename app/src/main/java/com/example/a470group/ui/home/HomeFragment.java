@@ -157,7 +157,6 @@ public class HomeFragment extends Fragment implements
       addStopMarker(stop);
     }
 
-
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
 
