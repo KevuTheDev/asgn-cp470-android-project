@@ -12,6 +12,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.a470group.databinding.ActivityMainScreenBinding;
 
+/**
+ * The type Main screen.
+ */
 public class MainScreen extends AppCompatActivity {
   private ActivityMainScreenBinding binding;
 

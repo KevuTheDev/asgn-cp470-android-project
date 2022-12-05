@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.a470group.databinding.FragmentNotificationsBinding;
 
+/**
+ * The type Notifications fragment.
+ */
 public class NotificationsFragment extends Fragment {
 
   private FragmentNotificationsBinding binding;
