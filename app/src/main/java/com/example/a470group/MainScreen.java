@@ -106,8 +106,6 @@ public class MainScreen extends AppCompatActivity {
 
         //Stop stopsMarker = new Stop(latitude, longitude, stopName);
         stops.add(new Stop(latitude, longitude, title, routes));
-        Log.d(ACTIVITY_NAME, stops.get(i).toString());
-
       }
     }catch(JSONException e){
       e.printStackTrace();

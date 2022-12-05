@@ -14,6 +14,10 @@ public class Route {
         this.schedules = sSchedules;
     }
 
+    public ArrayList<Schedule> getSchedules() {
+        return this.schedules;
+    }
+
     public int getStopID() {
         return this.stopID;
     }

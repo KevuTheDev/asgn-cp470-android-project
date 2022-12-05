@@ -66,6 +66,8 @@ public class Stop {
     return this.latlng;
   }
 
+  public ArrayList<Route> getRoutes() { return this.routes; }
+
   @NonNull
   public String toString() {
     StringBuilder output = new StringBuilder("Stop: " + this.name + " | " + getLat() + ", " + getLng() + "\n");

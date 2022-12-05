@@ -12,6 +12,14 @@ public class Schedule {
     private Day day;
     private final String arrivalTime;
 
+    public String getDay() {
+        return this.day.name();
+    }
+
+    public String getArrivalTime() {
+        return this.arrivalTime;
+    }
+
     public Schedule(String dDay, String aArrivalTime){
         day = stringToDay(dDay);
         arrivalTime = aArrivalTime;
