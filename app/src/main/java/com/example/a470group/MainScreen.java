@@ -52,11 +52,8 @@ public class MainScreen extends AppCompatActivity {
 
     // Get the longitude and latitude from json
     Resources res = getResources();
-
     InputStream is = res.openRawResource(R.raw.stopdata2);
-
     Scanner scanner = new Scanner(is);
-
     StringBuilder builder = new StringBuilder();
 
     while(scanner.hasNextLine()) {
@@ -66,9 +63,7 @@ public class MainScreen extends AppCompatActivity {
     String s = builder.toString();
     try {
       JSONObject rootJson = new JSONObject(s);
-
       JSONArray allStops = rootJson.getJSONArray("allStops");
-
       ArrayList<ArrayList<String>> dayList = new ArrayList<ArrayList<String>>(10);
 
       for (int i = 0; i < allStops.length(); ++i) {

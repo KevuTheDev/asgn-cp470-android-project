@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.a470group.MainScreen;
 import com.example.a470group.R;
 import com.example.a470group.Stop;
 import com.example.a470group.databinding.FragmentDashboardBinding;
@@ -167,7 +168,7 @@ public class DashboardFragment extends Fragment {
     binding = null;
   }
 
-  private class DashboardAdapter extends ArrayAdapter<String> {
+  private class DashboardAdapter extends ArrayAdapter<Stop> {
     /**
      * Instantiates a new Dashboard adapter.
      *
@@ -178,11 +179,11 @@ public class DashboardFragment extends Fragment {
     }
 
     public int getCount(){
-      return stopsList.size();
+      return MainScreen.stops.size();
     }
 
-    public String getItem(int position){
-      return stopsList.get(position);
+    public Stop getItem(int position){
+      return MainScreen.stops.get(position);
     }
 
     public View getView(int position, View convertView, ViewGroup parent){
@@ -193,7 +194,7 @@ public class DashboardFragment extends Fragment {
       result = inflater.inflate(R.layout.stops_row, null);
       message = (TextView) result.findViewById(R.id.TextMessage);
 
-      message.setText(   getItem(position)  ); // get the string at position
+      message.setText(   getItem(position).getName()  ); // get the string at position
       return result;
     }
   }
