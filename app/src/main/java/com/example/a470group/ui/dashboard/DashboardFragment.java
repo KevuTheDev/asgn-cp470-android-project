@@ -32,9 +32,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The type Dashboard fragment.
+ */
 public class DashboardFragment extends Fragment {
-  //todo : Change variables ot match the content of the class
+  /**
+   * The constant FRAGMENT_NAME.
+   */
+//todo : Change variables ot match the content of the class
   protected static final String FRAGMENT_NAME = "DashboardFragment";
+  /**
+   * The constant GET_JSON.
+   */
   protected static final String GET_JSON = "JSON Start: ";
 
   private FragmentDashboardBinding binding;
@@ -158,6 +167,11 @@ public class DashboardFragment extends Fragment {
   }
 
   private class DashboardAdapter extends ArrayAdapter<String> {
+    /**
+     * Instantiates a new Dashboard adapter.
+     *
+     * @param ctx the ctx
+     */
     public DashboardAdapter(Context ctx) {
       super(ctx, 0);
     }
@@ -183,6 +197,13 @@ public class DashboardFragment extends Fragment {
     }
   }
 
+  /**
+   * Make dialog.
+   *
+   * @param ctx       the ctx
+   * @param stopName  the stop name
+   * @param stopTimes the stop times
+   */
   public void makeDialog(Context ctx, String stopName, ArrayList<String> stopTimes) {
 
     AlertDialog.Builder myCustomDialogBuilder = new AlertDialog.Builder(ctx);
@@ -215,6 +236,11 @@ public class DashboardFragment extends Fragment {
     myDialog.show();
   }
 
+  /**
+   * On stop click.
+   *
+   * @param view the view
+   */
   public void onStopClick(View view){
     TextView x = (TextView) view;
     Log.i("butt",x.toString());

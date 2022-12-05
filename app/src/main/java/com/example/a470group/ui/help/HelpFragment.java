@@ -14,10 +14,18 @@ import android.view.ViewGroup;
 
 import com.example.a470group.R;
 
+/**
+ * The type Help fragment.
+ */
 public class HelpFragment extends Fragment {
 
     private HelpViewModel mViewModel;
 
+    /**
+     * New instance help fragment.
+     *
+     * @return the help fragment
+     */
     public static HelpFragment newInstance() {
         return new HelpFragment();
     }

@@ -34,10 +34,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * The type Home fragment.
+ */
 public class HomeFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback{
+  /**
+   * The constant FRAGMENT_NAME.
+   */
   protected static final String FRAGMENT_NAME = "HomeFragment";
   private static final int DEFAULT_ZOOM = 15;
   private static final int WIDE_ZOOM = 14;

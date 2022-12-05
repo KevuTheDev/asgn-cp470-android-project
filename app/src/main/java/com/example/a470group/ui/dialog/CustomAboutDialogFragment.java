@@ -10,6 +10,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.a470group.R;
 
+/**
+ * The type Custom about dialog fragment.
+ */
 public class CustomAboutDialogFragment extends DialogFragment {
     @NonNull
     @Override
@@ -21,6 +24,9 @@ public class CustomAboutDialogFragment extends DialogFragment {
                 .create();
     }
 
+    /**
+     * The constant TAG.
+     */
     public static String TAG = "CustomAboutDialog";
 
 }
