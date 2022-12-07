@@ -1,5 +1,7 @@
 package com.example.a470group.ui.home;
 
+import static java.util.Objects.isNull;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -22,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a470group.MainScreen;
@@ -36,7 +39,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,7 +155,45 @@ public class HomeFragment extends Fragment implements
     mMap = googleMap;
     mMap.setOnMyLocationButtonClickListener(this);
     mMap.setOnMyLocationClickListener(this);
+    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+      @Override public boolean onMarkerClick(Marker marker) {
+        String title =marker.getTitle();
+        Stop s= null;
+        for (Stop stop : MainScreen.stops) {
+          if(stop.getName().equals(title)) {
+
+
+            Log.i("ahs","we found a match");
+            s = stop;
+            break;
+          }
+        }
+        if(!isNull(s)) {
+          Log.i("ahs","aint null");
+
+          View layout = getView().findViewById(R.id.stopDetails);
+          layout.setVisibility(View.VISIBLE);
+
+          TextView t = getView().findViewById(R.id.stopDetailsText);
+          t.setText(s.getName() +"\n" + s.getRoutes());
+          layout.setVisibility(View.VISIBLE);
+        }else
+          Log.i("ahs","we null");
+
+        Log.i("hi", title);
+
+        return false;
+      }
+    });
+    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+      @Override
+      public void onMapClick(LatLng latLng) {
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.INVISIBLE);
+        Log.i("hi","BUE");
+      }
+    });
     checkLocationPermission();
 
     for (Stop stop : MainScreen.stops) {
@@ -159,6 +202,7 @@ public class HomeFragment extends Fragment implements
 
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
+
 
   /**
    * Given a stop, will take its data and put a marker onto the map
@@ -186,6 +230,7 @@ public class HomeFragment extends Fragment implements
       requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
       Log.d(FRAGMENT_NAME, "hmm");
   }
+
 
   @Override
   public boolean onMyLocationButtonClick() {

@@ -7,8 +7,28 @@
     tools:context=".ui.home.HomeFragment">
 
     <fragment
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/google_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/stopDetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/stopDetailsText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#C0FFFFFF"
+            android:text="This is the stop details..."
+            android:textSize="20sp" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
