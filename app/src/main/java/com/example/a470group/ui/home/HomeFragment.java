@@ -1,5 +1,7 @@
 package com.example.a470group.ui.home;
 
+import static java.util.Objects.isNull;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -22,11 +24,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a470group.MainScreen;
 import com.example.a470group.R;
 import com.example.a470group.Stop;
+import com.example.a470group.ui.StopDialog;
 import com.example.a470group.ui.dashboard.DashboardFragment;
 import com.example.a470group.ui.dialog.CustomAboutDialogFragment;
 import com.example.a470group.ui.dialog.CustomFutureDialogFragment;
@@ -36,7 +40,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +68,7 @@ public class HomeFragment extends Fragment implements
   private static final int DEFAULT_ZOOM = 15;
   private static final int WIDE_ZOOM = 14;
   private GoogleMap mMap;
+  private Stop selectedStop;
 
   private boolean PERMISSION_GRANTED = false;
   
@@ -80,7 +88,22 @@ public class HomeFragment extends Fragment implements
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    FloatingActionButton fab = getView().findViewById(R.id.stopDetailsFAB);
+    fab.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v)
+      {
+        StopDialog.makeDialog(getContext(),selectedStop,getLayoutInflater());
+
+      }
+    });
   }
 
   @Override
@@ -90,6 +113,8 @@ public class HomeFragment extends Fragment implements
 
     // Initialize view
     View view=inflater.inflate(R.layout.fragment_home, container, false);
+
+
 
     // Initialize map fragment
     SupportMapFragment supportMapFragment=(SupportMapFragment)
@@ -150,7 +175,34 @@ public class HomeFragment extends Fragment implements
     mMap = googleMap;
     mMap.setOnMyLocationButtonClickListener(this);
     mMap.setOnMyLocationClickListener(this);
+    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+      @Override public boolean onMarkerClick(Marker marker) {
+        String title =marker.getTitle();
+
+        for (Stop stop : MainScreen.stops) {
+          if(stop.getName().equals(title)) {
+
+            selectedStop = stop;
+            break;
+          }
+        }
+
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.VISIBLE);
+
+
+        return false;
+      }
+    });
+    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+      @Override
+      public void onMapClick(LatLng latLng) {
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.INVISIBLE);
+        Log.i("hi","BUE");
+      }
+    });
     checkLocationPermission();
 
     for (Stop stop : MainScreen.stops) {
@@ -159,6 +211,7 @@ public class HomeFragment extends Fragment implements
 
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
+
 
   /**
    * Given a stop, will take its data and put a marker onto the map
@@ -186,6 +239,7 @@ public class HomeFragment extends Fragment implements
       requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
       Log.d(FRAGMENT_NAME, "hmm");
   }
+
 
   @Override
   public boolean onMyLocationButtonClick() {

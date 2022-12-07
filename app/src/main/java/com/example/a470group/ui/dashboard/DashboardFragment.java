@@ -28,6 +28,7 @@ import com.example.a470group.Route;
 import com.example.a470group.Schedule;
 import com.example.a470group.Stop;
 import com.example.a470group.databinding.FragmentDashboardBinding;
+import com.example.a470group.ui.StopDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,7 +77,7 @@ public class DashboardFragment extends Fragment {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-          makeDialog(getContext(), MainScreen.stops.get(i));
+          StopDialog.makeDialog(getContext(), MainScreen.stops.get(i),inflater);
           Log.d(FRAGMENT_NAME, "!!!!!!!!!!!");
         }
       });
@@ -123,53 +124,6 @@ public class DashboardFragment extends Fragment {
     }
   }
 
-  /**
-   * Make dialog.
-   *
-   * @param ctx       the ctx
-   */
-  @SuppressLint("SetTextI18n")
-  public void makeDialog(Context ctx, Stop myStop) {
-
-    AlertDialog.Builder myCustomDialogBuilder = new AlertDialog.Builder(ctx);
-    LayoutInflater myInflater = this.getLayoutInflater();
-    final View view = myInflater.inflate(R.layout.dialog_dashboard_stops, null);
-
-    myCustomDialogBuilder.setView(view)
-            .setNegativeButton("Close",
-                    new DialogInterface.OnClickListener() {
-                      @Override
-                      public void onClick(DialogInterface dialogInterface, int i) {
-                      }
-                    });
-
-    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.linearLayoutDialog);
-
-    //  Adding the stop times onto the dialog
-    for (Route r : myStop.getRoutes()) {
-      TextView textView = new TextView(ctx);
-      textView.setText("Stop ID: " + r.getStopID());
-      linearLayout.addView(textView);
-
-      LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
-      params.setMargins(75, 5, 75, 5);
-      textView.setLayoutParams(params);
-
-      for (Schedule s: r.getSchedules()) {
-        TextView textView1 = new TextView(ctx);
-        textView1.setText(s.getDay() + ":\n" + s.getArrivalTime());
-        linearLayout.addView(textView1);
-
-        LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) textView1.getLayoutParams();
-        params1.setMargins(75, 5, 75, 5);
-        textView1.setLayoutParams(params1);
-      }
-    }
-    myCustomDialogBuilder.setTitle(myStop.getName()); // set title
-
-    Dialog myDialog = myCustomDialogBuilder.create();
-    myDialog.show();
-  }
 
   /**
    * On stop click.
