@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.a470group.MainScreen;
 import com.example.a470group.R;
 import com.example.a470group.Stop;
+import com.example.a470group.ui.StopDialog;
 import com.example.a470group.ui.dashboard.DashboardFragment;
 import com.example.a470group.ui.dialog.CustomAboutDialogFragment;
 import com.example.a470group.ui.dialog.CustomFutureDialogFragment;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,6 +68,7 @@ public class HomeFragment extends Fragment implements
   private static final int DEFAULT_ZOOM = 15;
   private static final int WIDE_ZOOM = 14;
   private GoogleMap mMap;
+  private Stop selectedStop;
 
   private boolean PERMISSION_GRANTED = false;
   
@@ -85,7 +88,22 @@ public class HomeFragment extends Fragment implements
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    FloatingActionButton fab = getView().findViewById(R.id.stopDetailsFAB);
+    fab.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v)
+      {
+        StopDialog.makeDialog(getContext(),selectedStop,getLayoutInflater());
+
+      }
+    });
   }
 
   @Override
@@ -95,6 +113,8 @@ public class HomeFragment extends Fragment implements
 
     // Initialize view
     View view=inflater.inflate(R.layout.fragment_home, container, false);
+
+
 
     // Initialize map fragment
     SupportMapFragment supportMapFragment=(SupportMapFragment)
@@ -159,29 +179,18 @@ public class HomeFragment extends Fragment implements
 
       @Override public boolean onMarkerClick(Marker marker) {
         String title =marker.getTitle();
-        Stop s= null;
+
         for (Stop stop : MainScreen.stops) {
           if(stop.getName().equals(title)) {
 
-
-            Log.i("ahs","we found a match");
-            s = stop;
+            selectedStop = stop;
             break;
           }
         }
-        if(!isNull(s)) {
-          Log.i("ahs","aint null");
 
-          View layout = getView().findViewById(R.id.stopDetails);
-          layout.setVisibility(View.VISIBLE);
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.VISIBLE);
 
-          TextView t = getView().findViewById(R.id.stopDetailsText);
-          t.setText(s.getName() +"\n" + s.getRoutes());
-          layout.setVisibility(View.VISIBLE);
-        }else
-          Log.i("ahs","we null");
-
-        Log.i("hi", title);
 
         return false;
       }
