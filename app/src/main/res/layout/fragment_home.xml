@@ -27,9 +27,9 @@
             android:id="@+id/stopDetailsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#E5FFFFFF"
+            android:background="#FFFFFF"
             android:text="Show Stop Details"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/stopDetailsFAB"
