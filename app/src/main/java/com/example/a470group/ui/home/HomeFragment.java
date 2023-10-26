@@ -1,45 +1,74 @@
 package com.example.a470group.ui.home;
 
-import static androidx.core.content.ContextCompat.getSystemService;
+import static java.util.Objects.isNull;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a470group.MainScreen;
 import com.example.a470group.R;
 import com.example.a470group.Stop;
+import com.example.a470group.ui.StopDialog;
+import com.example.a470group.ui.dashboard.DashboardFragment;
+import com.example.a470group.ui.dialog.CustomAboutDialogFragment;
+import com.example.a470group.ui.dialog.CustomFutureDialogFragment;
+import com.example.a470group.ui.dialog.CustomHelpDialogFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Objects;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+/**
+ * The type Home fragment.
+ */
 public class HomeFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback{
+  /**
+   * The constant FRAGMENT_NAME.
+   */
   protected static final String FRAGMENT_NAME = "HomeFragment";
   private static final int DEFAULT_ZOOM = 15;
   private static final int WIDE_ZOOM = 14;
   private GoogleMap mMap;
+  private Stop selectedStop;
 
   private boolean PERMISSION_GRANTED = false;
   
@@ -57,12 +86,35 @@ public class HomeFragment extends Fragment implements
           });
 
   @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setHasOptionsMenu(true);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    FloatingActionButton fab = getView().findViewById(R.id.stopDetailsFAB);
+    fab.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View v)
+      {
+        StopDialog.makeDialog(getContext(),selectedStop,getLayoutInflater());
+
+      }
+    });
+  }
+
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     Log.d(FRAGMENT_NAME, "onCreateView Created");
 
     // Initialize view
     View view=inflater.inflate(R.layout.fragment_home, container, false);
+
+
 
     // Initialize map fragment
     SupportMapFragment supportMapFragment=(SupportMapFragment)
@@ -75,7 +127,45 @@ public class HomeFragment extends Fragment implements
       mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
+
     return view;
+  }
+
+  @Override
+  public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+    menu.add(getString(R.string.home_menu_option1));
+    menu.add(getString(R.string.home_menu_option3));
+    menu.add(getString(R.string.home_menu_option2));
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    CharSequence title = item.getTitle();
+    if (title.equals(getString(R.string.home_menu_option1))) {
+      helpDialog();
+    } else if (title.equals(getString(R.string.home_menu_option2))) {
+      aboutDialog();
+    }else if (title.equals(getString(R.string.home_menu_option3))) {
+      futureDialog();
+    }
+    return true;
+  }
+
+  private void helpDialog() {
+    new CustomHelpDialogFragment().show(
+            getChildFragmentManager(), CustomHelpDialogFragment.TAG);
+  }
+
+  private void aboutDialog() {
+    new CustomAboutDialogFragment().show(
+            getChildFragmentManager(), CustomAboutDialogFragment.TAG);
+  }
+
+  private void futureDialog() {
+    new CustomFutureDialogFragment().show(
+            getChildFragmentManager(), CustomFutureDialogFragment.TAG
+    );
   }
 
   @Override
@@ -85,24 +175,43 @@ public class HomeFragment extends Fragment implements
     mMap = googleMap;
     mMap.setOnMyLocationButtonClickListener(this);
     mMap.setOnMyLocationClickListener(this);
+    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
+      @Override public boolean onMarkerClick(Marker marker) {
+        String title =marker.getTitle();
+
+        for (Stop stop : MainScreen.stops) {
+          if(stop.getName().equals(title)) {
+
+            selectedStop = stop;
+            break;
+          }
+        }
+
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.VISIBLE);
+
+
+        return false;
+      }
+    });
+    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+      @Override
+      public void onMapClick(LatLng latLng) {
+        View layout = getView().findViewById(R.id.stopDetails);
+        layout.setVisibility(View.INVISIBLE);
+        Log.i("hi","BUE");
+      }
+    });
     checkLocationPermission();
 
-    // When map is loaded
-    Stop[] stops = new Stop[4];
-    stops[0] = new Stop(43.491552,-80.537559,"Albert / Weber");
-    stops[1] = new Stop(43.490533,-80.539508,"Albert / Longwood");
-    stops[2] = new Stop(43.488146,-80.541394,"Albert / Greenbrier");
-    stops[3] = new Stop(43.487633,-80.541571,"Albert / Quiet");
-
-    // add markers
-    addStopMarker(stops[0]);
-    addStopMarker(stops[1]);
-    addStopMarker(stops[2]);
-    addStopMarker(stops[3]);
+    for (Stop stop : MainScreen.stops) {
+      addStopMarker(stop);
+    }
 
     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(waterloo, WIDE_ZOOM));
   }
+
 
   /**
    * Given a stop, will take its data and put a marker onto the map
@@ -130,6 +239,7 @@ public class HomeFragment extends Fragment implements
       requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
       Log.d(FRAGMENT_NAME, "hmm");
   }
+
 
   @Override
   public boolean onMyLocationButtonClick() {

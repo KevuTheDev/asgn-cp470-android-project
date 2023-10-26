@@ -13,6 +13,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.a470group.databinding.ActivityMapsBinding;
 
+/**
+ * The type Maps activity.
+ */
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
   private GoogleMap mMap;
